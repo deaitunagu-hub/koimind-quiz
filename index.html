@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>返信スタイル診断</title>
+<meta name="description" content="既読・返信・距離感・不安。10の場面を選ぶだけで、あなたの恋愛の返信スタイルを5タイプから診断します。採点はこの端末の中だけで行い、送信も保存もしません。">
+<meta property="og:title" content="恋愛の返信スタイル診断|こいまいんど">
+<meta property="og:description" content="既読2時間で世界が終わる? 既読のまま冷蔵する? 10問で分かる、あなたの返信スタイル5タイプ。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deaitunagu-hub.github.io/koimind-quiz/">
+<meta property="og:image" content="https://deaitunagu-hub.github.io/koimind-quiz/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://deaitunagu-hub.github.io/koimind-quiz/">
+<meta name="theme-color" content="#fff7ef">
+<style>
+  :root{
+    --bg:#fff7ef; --card:#ffffff; --ink:#2b2a28; --muted:#6f6a63; --line:#eadfd2;
+    --green:#4fae3f; --green-d:#3a8c2d; --green-soft:#e8f5e3;
+    --pink:#e0657a; --pink-soft:#fde9ed; --amber:#f2b63d;
+    --shadow:0 6px 24px rgba(70,40,10,.08);
+    --r:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",system-ui,-apple-system,sans-serif;
+    font-size:16px; line-height:1.75; -webkit-text-size-adjust:100%;
+    overflow-x:hidden;
+  }
+  a{color:var(--green-d)}
+  .wrap{max-width:560px;margin:0 auto;padding:16px 16px 48px}
+  header.top{display:flex;align-items:center;gap:10px;padding:6px 0 14px;color:var(--muted);font-size:13px}
+  header.top .dot{width:10px;height:10px;border-radius:50%;background:var(--green)}
+  .screen{display:none}
+  .screen.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:24px 16px}
+  h1{font-size:26px;line-height:1.35;margin:0 0 8px;letter-spacing:.01em}
+  h2{font-size:20px;margin:0 0 6px;line-height:1.4}
+  h3{font-size:16px;margin:24px 0 8px;color:var(--green-d)}
+  p{margin:0 0 12px}
+  .lead{color:var(--muted);font-size:15px}
+  .hero{display:flex;justify-content:center;margin:8px 0 8px}
+  .hero img{width:min(46vw,200px);height:auto}
+  .badge{display:inline-block;background:var(--green-soft);color:var(--green-d);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;margin-bottom:8px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;border:0;border-radius:14px;padding:14px 16px;font-size:17px;font-weight:700;cursor:pointer;background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-d);transition:transform .06s}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--green-d)}
+  .btn.sub{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none;font-weight:600}
+  .btn.pink{background:var(--pink);box-shadow:0 4px 0 #b34a5c}
+  .btn.pink:active{box-shadow:0 2px 0 #b34a5c}
+  .btn + .btn{margin-top:8px}
+  .fine{font-size:12px;color:var(--muted);margin-top:16px}
+  /* quiz */
+  .progress{height:8px;background:#f1e7da;border-radius:999px;overflow:hidden;margin:4px 0 16px}
+  .progress i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+  .qnum{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+  .qtext{font-size:19px;font-weight:700;line-height:1.5;margin:4px 0 16px}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;font-size:15px;line-height:1.55;color:var(--ink);cursor:pointer}
+  .opt:hover{border-color:var(--green)}
+  .opt:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .opt b{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--green-soft);color:var(--green-d);display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px}
+  .nav{display:flex;justify-content:space-between;margin-top:16px}
+  .link{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;padding:6px 2px;text-decoration:underline}
+  /* result */
+  .rcard{text-align:center;background:var(--card);border:2px solid var(--green-soft)}
+  .rcard img{width:min(44vw,190px);height:auto;margin:4px auto 6px;display:block}
+  .tname{font-size:28px;font-weight:900;margin:0;line-height:1.3}
+  .tcatch{font-size:16px;color:var(--pink);font-weight:700;margin:4px 0 10px}
+  .subtype{font-size:13px;color:var(--muted)}
+  .bars{margin:14px 0 4px;text-align:left}
+  .bar{display:grid;grid-template-columns:72px 1fr 28px;align-items:center;gap:8px;font-size:13px;margin:5px 0}
+  .bar span.tr{height:10px;background:#f1e7da;border-radius:999px;overflow:hidden}
+  .bar span.tr i{display:block;height:100%;background:var(--green);border-radius:999px}
+  .bar.top span.tr i{background:var(--pink)}
+  .desc{font-size:15.5px}
+  ol.todo{padding-left:0;margin:0;list-style:none;counter-reset:n}
+  ol.todo li{position:relative;padding:12px 12px 12px 48px;background:var(--green-soft);border-radius:12px;margin:8px 0;font-size:15px;counter-increment:n}
+  ol.todo li::before{content:counter(n);position:absolute;left:12px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .cta{border:1.5px solid var(--line);border-radius:14px;padding:16px;margin:8px 0;background:#fff}
+  .cta h4{margin:0 0 6px;font-size:15px}
+  .cta ul{margin:0;padding-left:18px;font-size:14.5px}
+  .cta li{margin:4px 0}
+  .cta .paid{font-size:12px;color:var(--muted);margin:6px 0 0}
+  .cta.kindle{border-color:#f5d9a8;background:#fffaf1}
+  .cta.tips{border-color:#f3c9d0;background:#fff6f7}
+  .tag{display:inline-block;font-size:11px;background:var(--pink-soft);color:var(--pink);border-radius:6px;padding:0 6px;margin-left:4px;vertical-align:middle}
+  .src{font-size:12px;color:var(--muted);border-top:1px dashed var(--line);margin-top:24px;padding-top:16px}
+  .src summary{cursor:pointer}
+  footer{font-size:12px;color:var(--muted);text-align:left;margin-top:32px;line-height:1.7}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100vw - 32px)}
+  .toast.on{opacity:1}
+  @media (max-width:360px){h1{font-size:23px}.qtext{font-size:17px}.tname{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="dot"></span>こいまいんど|恋愛心理学ラボ</header>
+
+  <!-- ===== START ===== -->
+  <section id="start" class="screen active">
+    <div class="card">
+      <span class="badge">10問・約2分・登録なし</span>
+      <h1>恋愛の<br>返信スタイル診断</h1>
+      <p class="lead">既読がついて2時間。返信がない夜、あなたは何をしますか。<br>既読・返信・距離・不安。10の場面を選ぶだけで、あなたの「返信スタイル」を5タイプから診断します。</p>
+      <div class="hero"><img src="img/hero.png" alt="ヨーギライス(緑の小さな恐竜)が金づちと板を持って安全基地を建てている" width="339" height="420"></div>
+      <button class="btn" id="btnStart">診断をはじめる</button>
+      <p class="fine">採点はこの端末の中(ブラウザ)だけで行います。回答の送信・保存はしません。結果はあなただけに表示されます。<br>読み物としての診断で、医学的な診断・検査ではありません。</p>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section id="quiz" class="screen">
+    <div class="card">
+      <div class="progress"><i id="prog"></i></div>
+      <div class="qnum" id="qnum">Q1 / 10</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="nav">
+        <button class="link" id="btnBack">← ひとつ前へ</button>
+        <button class="link" id="btnQuit">最初に戻る</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section id="result" class="screen">
+    <div class="card rcard" id="rcard">
+      <span class="badge">あなたの返信スタイル</span>
+      <img id="rimg" src="" alt="">
+      <p class="tname" id="rname"></p>
+      <p class="tcatch" id="rcatch"></p>
+      <p class="subtype" id="rsub"></p>
+      <div class="bars" id="rbars"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2 id="rname2"></h2>
+      <p class="desc" id="rdesc"></p>
+      <h3>今日できること、3つ</h3>
+      <ol class="todo" id="rtodo"></ol>
+
+      <h3>共有する・保存する</h3>
+      <button class="btn" id="btnShare">Xで結果を共有</button>
+      <button class="btn sub" id="btnSave">結果カードを画像で保存</button>
+      <button class="btn sub" id="btnRetry">もう一度診断する</button>
+      <p class="fine">共有ボタンは X の投稿画面を開くだけです。画像は端末内で作ります(送信しません)。</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>もっと深く知りたい人へ</h2>
+      <p class="lead">この診断は、note「こいまいんど|恋愛心理学ラボ」の記事をもとに作っています。あなたのタイプに近い記事から読めます。</p>
+
+      <div class="cta note">
+        <h4>このタイプのもとになった記事(note・無料)</h4>
+        <ul id="rnotes"></ul>
+      </div>
+
+      <div class="cta kindle" style="display:none">
+        <h4>一冊で、はじめから順に読む</h4>
+        <p style="font-size:14.5px;margin:0 0 6px">愛着スタイルを、はじめから順に知りたい人へ。この診断の土台にある考え方を、一冊の本『ふたりの心理学』にまとめました。こちらは有料のKindle本です。</p>
+        <ul><li><a id="lnkKindle" href="#" target="_blank" rel="noopener">『ふたりの心理学』(Kindle)を見る</a></li></ul>
+      </div>
+
+      <div class="cta tips" style="display:none">
+        <h4>場面別の台本・チェック表(Tips)</h4>
+        <ul id="rtips"></ul>
+        <p class="paid">こちらは有料記事です。</p>
+      </div>
+    </div>
+
+    <details class="src">
+      <summary>この診断について(出典と注意)</summary>
+      <p style="margin-top:8px">設問と結果文は、note「こいまいんど|恋愛心理学ラボ」の次の記事をもとに作りました。愛着スタイル(ジョン・ボウルビィの愛着理論)を土台にした読み物であり、医学的な診断ではありません。研究の数字は集団の平均で、個別の処方ではありません。</p>
+      <ul id="allsrc" style="font-size:12px;padding-left:18px"></ul>
+      <p>確認したい衝動が仕事中も止まらない、眠れない、食欲が落ちる、自分を傷つけたくなる。どれかが当てはまるときは、この診断は補助線にすぎません。臨床心理士やカップル療法、必要なら精神科を先に頼ってください(記事の案内と同じ考え方です)。</p>
+    </details>
+  </section>
+
+  <footer>© koimind|恋愛心理学ラボ<br>この診断は回答を送信・保存しません。外部のスクリプトや計測タグは使っていません。<br>イラストはAI生成(Higgsfield)です。</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   恋愛の返信スタイル診断 — 全てクライアント側で採点。送信・保存なし。
+   データの出典は 採点表.md(同フォルダ)に設問・結果文ごとに記録。
+   ============================================================ */
+'use strict';
+var SITE_URL = 'https://deaitunagu-hub.github.io/koimind-quiz/';            // 公開 URL が決まったら差し替え(例: https://<user>.github.io/koimind-quiz/)
+var KINDLE_URL = '[KindleURL]';
+var TIPS_URL = { t01:'[TipsURL_01]', t02:'[TipsURL_02]', t03:'[TipsURL_03]' };
+var NOTE = 'https://note.com/koimind_lab/n/';
+
+// 設問(採点表.md §3 と同じ並び)。t = 加点タイプ
+var Q = [
+ {q:'夜。相手に送ったLINEに既読がついて2時間。返信がない。', o:[
+   {t:'A',s:'「いま大丈夫?」を、もう一通送る'},
+   {t:'B',s:'気にしてないふりで別のことに没頭する。こっちも返信を止める'},
+   {t:'C',s:'送りたくてたまらないのに、いざ打ちはじめると急にどうでもよくなる'},
+   {t:'D',s:'寂しいけど言わない。気づいてくれるのを待つ'},
+   {t:'E',s:'5分だけ待って、「返信が遅い」と「嫌われた」は別だと確かめる'}],
+  src:'#04 2026-04-26 既読スルーで世界が終わる、あなたへ/#06 2026-04-28/#26 2026-06-15/#03 2026-04-23'},
+ {q:'相手からLINEが届いた。あなたの開き方は?', o:[
+   {t:'D',s:'用件だけ返す。気持ちは書かない。言わなくてもわかると思う'},
+   {t:'A',s:'通知が来た瞬間に開いて、すぐ返す。遅れると相手が不安になりそうで'},
+   {t:'E',s:'手が空いたら開いて、短くても返す。遅れたら「遅くなった、ごめん」を足す'},
+   {t:'B',s:'既読をつけずに通知だけで読んで、返事は気が向いてから'},
+   {t:'C',s:'開いた瞬間はうれしいのに、返事を考えているうちに面倒になって放置'}],
+  src:'#03 2026-04-23/#31 2026-07-17(題名)/#28 2026-06-21/#06 2026-04-28'},
+ {q:'相手から「今週はひとりの時間がほしい」と言われた。', o:[
+   {t:'B',s:'ちょうどいい。自分も楽になる。連絡しないまま週が終わる'},
+   {t:'E',s:'「分かった、来週話そう」と返して、自分の予定を入れる'},
+   {t:'A',s:'「私、なにかした?」とすぐ聞く。理由が分かるまで落ち着かない'},
+   {t:'D',s:'「了解」とだけ返す。寂しいとは言わない'},
+   {t:'C',s:'「分かった」と返したのに、翌日は「もう無理かも」と距離を置き、その翌日には会いたくなる'}],
+  src:'#03 2026-04-23/#04 2026-04-26/#06 2026-04-28'},
+ {q:'相手の返事が「うん」の一言だけ。', o:[
+   {t:'C',s:'冷たいと感じて距離を置くのに、しばらくすると自分から長文を送ってしまう'},
+   {t:'A',s:'「怒ってる?」と聞く。短い返事は不機嫌のサインに思える'},
+   {t:'D',s:'少し寂しい。でも言わない。「うん」にも意味があるはずと、受け取り方を探す'},
+   {t:'E',s:'「うん」は「うん」。気になるなら「今、話せる?」と確かめる'},
+   {t:'B',s:'自分も「うん」で返す。短いほうが楽'}],
+  src:'#04 2026-04-26/#03 2026-04-23/#06 2026-04-28/#28 2026-06-21'},
+ {q:'「今、どんな気持ち?」と聞かれた。', o:[
+   {t:'B',s:'「べつに」。言葉が出てこない。聞かれると少し息が詰まる'},
+   {t:'A',s:'本音の前に「私のこと、嫌いになってない?」が口から出る'},
+   {t:'D',s:'「察してほしい」。聞かれる前に分かってほしかった'},
+   {t:'E',s:'うまく言えなくても、「いま7くらいしんどい」と数字で渡す'},
+   {t:'C',s:'話したいのに、話しはじめると「なんで聞くの?」と腹が立ってくる'}],
+  src:'#03 2026-04-23/#04 2026-04-26/#22 2026-05-28/#06 2026-04-28/#18 2026-05-11(題名)'},
+ {q:'ケンカの夜。', o:[
+   {t:'E',s:'「今夜は結論を出さない。明日の朝、話そう」と棚に置く'},
+   {t:'A',s:'解決するまで寝られない。相手が黙るほど、言葉で詰めてしまう'},
+   {t:'D',s:'言い返さずに飲み込む。その代わり、しばらく口数が減る'},
+   {t:'C',s:'「もう別れる」と言ってしまい、1時間後に「やっぱり好き」と連絡する'},
+   {t:'B',s:'黙る。別の部屋に行く。言葉が出るまで時間がいる'}],
+  src:'#22 2026-05-28/#06 2026-04-28/#26 2026-06-15/#88 2026-09-26(題名)'},
+ {q:'話している途中で、相手がスマホを見た。', o:[
+   {t:'B',s:'気にしない。自分もスマホを見る'},
+   {t:'D',s:'さみしい。でも言わない。たかが画面で、と自分に言い聞かせる'},
+   {t:'A',s:'「私より画面が大事なんだ」と胸がざわつき、その場で何度も確かめたくなる'},
+   {t:'E',s:'「こっち見て話したいな」と、自分の気持ちを主語にして伝える'},
+   {t:'C',s:'すっと冷めて黙るのに、あとで「ちゃんと見てよ」と強く責めてしまう'}],
+  src:'#26 2026-06-15 スマホ無視と二人の距離'},
+ {q:'相手が、頼んでいない小さなことをしてくれた(お茶を入れる・ゴミを出す)。', o:[
+   {t:'E',s:'その場で「お茶、ありがとう」と、何に対してかを添えて言う'},
+   {t:'D',s:'長い付き合いだし、言わなくても伝わっているはず'},
+   {t:'A',s:'うれしくて落ち着かない。「嫌われてない証拠」として数えてしまう'},
+   {t:'C',s:'うれしいのに「急に優しいのは怪しい」と思って、少し身構える'},
+   {t:'B',s:'気づいてはいるが、口に出すのは照れくさいので言わない'}],
+  src:'#28 2026-06-21 ありがとうの言い忘れ/#06 2026-04-28/#04 2026-04-26'},
+ {q:'連絡の頻度が、相手と合わない。', o:[
+   {t:'B',s:'相手のペースが多いと重い。既読のまま置く日が増える'},
+   {t:'D',s:'不満は言わない。向こうが気づいて合わせてくれるのを待つ'},
+   {t:'E',s:'「平日は夜1回、週末は多めで」と、頻度を話し合って決める'},
+   {t:'A',s:'自分のペースに合わせてほしくて、連絡が減ると不安で増やしてしまう'},
+   {t:'C',s:'相手が多いと引き、相手が減ると追う。どっちが本音か分からない'}],
+  src:'#22 2026-05-28/#04 2026-04-26/#06 2026-04-28/#76 2026-09-13・#85 2026-09-23・#78 2026-09-15(題名)'},
+ {q:'「私のこと、本当に好き?」', o:[
+   {t:'C',s:'聞いておいて、答えを聞いた瞬間に冷める'},
+   {t:'B',s:'聞かれると困る。「好き」と言うのが、異常に難しい'},
+   {t:'E',s:'不安な日は「今日はちょっと不安な日」と先に言ってから聞く'},
+   {t:'A',s:'週に何度も聞いてしまう。答えを聞いても、数時間で不安が戻る'},
+   {t:'D',s:'聞かない。聞かなくても分かるものだと思っている。でも言われないと寂しい'}],
+  src:'#06 2026-04-28/#03 2026-04-23/#23 2026-05-30/#22 2026-05-28/#28 2026-06-21'}
+];
+
+// 結果(採点表.md §4・§5)
+var T = {
+ A:{name:'追いかけ型', catch:'既読2時間で、世界が終わる', img:'img/type_a.png', alt:'ヨーギライスが両手を合わせてお願いしている',
+    desc:'「返信が遅い」を「離れる前兆」と翻訳してしまう。既読2時間で、頭の中では別れ話のリハーサルが始まる。追いLINE・詰める・試し行動。でもこれは性格の重さではなく、体の警報装置が人より大きく鳴っているだけ。外からの返事で警報を止めると数十分しかもたず、次もまた外を待つ脳になる。これが確認ループの正体。追う側が追うほど相手は心を冷蔵し、追って逃げるダンスになりやすい。出口は「確認をやめる」ではない。確認の前に、1つだけ動作を挟むこと。順番を変えるだけで、確認の回数は2〜3週間で目に見えて減っていく。',
+    todo:['送る前に、4秒吸って6秒吐く呼吸を2分(タイマーをセット)。終わってもまだ送りたければ、送ってOK。',
+          '「既読2時間→嫌われた→別れる→一人」の連想を、矢印でメモに書き出す。何段階も飛躍しているのが見える。末尾に「警報音 いま○/10」を足す。',
+          '追いLINEの前に、自分に1つだけ聞く。「今、本当に見捨てられている証拠はある?」'],
+    notes:[['n41f6bcfde052','既読スルーで世界が終わる、あなたへ──不安型のしがみつきをほどく3ステップ','2026-04-26'],
+           ['n8275d37c877b','「いま大丈夫?」を10回送りたくなる人へ──不安型の確認ループから、夜に灯すべき次の一手','2026-05-30'],
+           ['nddfd97a293be','「LINEの返信が遅い」で1日が終わる人へ──待つ時間を自分の手に戻す','2026-08-22']],
+    tips:['t03','t02','t01'],
+    src:'#04 2026-04-26/#23 2026-05-30/#22 2026-05-28'},
+ B:{name:'冷蔵庫型', catch:'既読のまま、心を冷蔵する', img:'img/type_b.png', alt:'ヨーギライスが手を振って帰っていく',
+    desc:'近づかれると息が詰まり、ひとりの時間が回復時間。相手が感情的になると、自分だけスッと冷める。既読のまま置く、連絡が減る、聞かれても「べつに」。冷たいのではなく、感情の扉が固く閉まっているだけ。これが「心の冷蔵庫化」で、平気そうな顔の裏で、身体はちゃんと動揺している。幼い日に「感情を出さないほうが安全だ」と学んだ、賢い適応の名残。いちばんの悪癖は「無言で消える」こと。これが相手に「捨てられた」と思わせる。距離を取ること自体は悪くない。予告なく取るのが問題。「今週は自分の時間が必要。来週また話そう」の1行で、関係は驚くほど壊れない。',
+    todo:['距離を取るときは、必ず予告する。「今週は自分の時間が必要。来週また話そう」。この1行だけ。',
+          '「冷蔵庫が閉まった瞬間」をスマホのメモに記録する。「LINEを返す気が消えた瞬間があった」程度でいい。',
+          '黙る代わりに、数字だけ返す。「いま冷蔵中、明日話す」「いま5、夜には話せる」。'],
+    notes:[['n06cb4c48d72a','「ひとりが楽」は危険信号かも。回避型の恋愛、なぜ長続きしない?','2026-04-23'],
+           ['n9748a3f51d6c','「既読なのに未読のふり」をしてしまう人へ──回避型が距離を取る本当の理由','2026-07-17'],
+           ['ne1c72395f123','回避型の相手が喧嘩で黙り込む人へ──黙るのは攻撃ではなく、降りるサイン','2026-09-26']],
+    tips:['t02','t03','t01'],
+    src:'#03 2026-04-23/#22 2026-05-28'},
+ C:{name:'振り子型', catch:'近づくと逃げ、離れると追う', img:'img/type_c.png', alt:'ヨーギライスが汗をかいてお辞儀している',
+    desc:'近づきたいのに、近づくと怖い。離れたいのに、離れると不安。連絡したいのに、既読がつくと急にどうでもよくなる。「重い」と言われた経験と「冷たい」と言われた経験が、両方ある。「もう無理」の1時間後に「やっぱり好き」。情緒不安定なのではなく、「近づけ」と「近づくな」の2つの命令が、同じ脳で同時に走っているだけ。両立しない命令を両方守ろうとした、タフな子どもの名残。壊しがちなのは、ちゃんと優しい人との関係。「優しすぎて怪しい」は、本物の安全を危険として誤認している状態。一気に統合しなくていい。片方ずつ、ゆっくりほぐす。',
+    todo:['「今は回避モード? 不安モード?」を、その都度口に出してラベルを貼る。3回も意識すれば、切り替わる瞬間が見えてくる。',
+          'モードが切り替わった瞬間に、10秒だけ動かない。スマホを置く、深呼吸、別の部屋へ。ブロックも追いLINEも、その10秒の先で決める。',
+          '「この人とは絶対に壊さない」と決めた関係を、恋愛以外で1つ持つ。友達、家族、店員さんでもいい。'],
+    notes:[['nb0bd331f24b4','「好き」と「無理」が同時に来る人へ──恐れ回避型の恋愛、ぜんぶ説明する','2026-04-28'],
+           ['nfabfc7a0daaa','「好かれると冷める」が止まらない人へ──恐れ回避型の"近づくと逃げる"仕組み','2026-07-17'],
+           ['n64340546fec9','恐れ回避型の恋人に振り回される人へ──近づくと離れ、離れると近づく往復の受け方','2026-09-15']],
+    tips:['t02','t03','t01'],
+    src:'#06 2026-04-28'},
+ D:{name:'察して型', catch:'言わなくても伝わる、と思っている', img:'img/type_d.png', alt:'ヨーギライスが敬礼している',
+    desc:'「言わなくても伝わる」と「言ってもらえないと寂しい」が、同じ胸の中に同居している。用件は返すけれど、気持ちは書かない。ありがとうは照れくさくて飲み込む。さみしいときほど黙る。研究では、黙って耐える人より、言葉にして伝える人のほうが関係を守れていた。しかも不安を感じやすい人ほど、伝える効きめが大きかった。一番まずいのは「さみしいのに、黙る」。相手は気づかず、また同じことをする。あなたはまた傷つき、もっと黙る。この静かなループが、二人を冷やしていく。言わなくても伝わる、は半分ほんとうで、半分うそ。ちゃんと伝わるのは、言葉にした時だけ。',
+    todo:['相手が今日した小さなことを1つ、名指しで言う。「お茶、ありがとう」「ゴミ、助かった」。ためずに、その場で。',
+          '責めずに、主語を自分にして渡す。「スマホばっかりだね」ではなく「こっち見て話したいな」。',
+          '結論を求めず、今日のストレスを数字で1回だけ言う。「今日は7」。返事は待たない。'],
+    notes:[['n5e9c5a868d4f','「言わなくても伝わる」と「言ってもらえないと寂しい」が同居する人へ──ありがとうの言い忘れ','2026-06-21'],
+           ['n8b44d54435cd','「話してるのにスマホを見てる」と「私もつい見てしまう」が同居する人へ──スマホ無視と二人の距離','2026-06-15'],
+           ['nd683e26ee720','「追いかける私」と「逃げる相手」が同じ家にいる人へ──不安×回避のペアダンス、ぜんぶ説明する','2026-05-28']],
+    tips:['t03','t02','t01'],
+    src:'#28 2026-06-21/#26 2026-06-15/#22 2026-05-28'},
+ E:{name:'安全基地型', catch:'揺れても、戻ってこられる', img:'img/type_e.png', alt:'ヨーギライスが親指を立ててウインクしている',
+    desc:'揺れても、元の位置に戻れる。相手の返信が遅くても、自分の世界が崩れない。不安がゼロなのではなく、不安と一緒に日常を回せる人。既読2時間は「既読2時間」として受け取り、気になるなら推測ではなく事実を確かめる。相手の「ひとりの時間」を、別れの前兆とは読まない。安定型は生まれつきではなく、大人になってから獲得した人も多い。自覚して、過去を語り直し、壊れない関係を経験する。この3つが揃うと、同じループを回す自動運転は静かに速度を落とす。派手さはないけれど、関係が続く。ずれた瞬間に気づける。それがこのタイプのいちばんの強み。',
+    todo:['反応する前に2秒おいて、「これは私のパターンだ」と言葉にする習慣を、続ける。',
+          '1日1回、ストレスを数字で先に投げる。「いま7」。返事は待たない。二人で凍る夜が、事前に分かる。',
+          '合意できない話は「私はこう、あなたはこう、いまは違うね」で棚に置き、次に話す日だけ決める。'],
+    notes:[['n6aafb0514734','安定型は生まれつきじゃない──大人から育て直す「安全基地の再設計」完全ガイド','2026-04-26'],
+           ['nd683e26ee720','「追いかける私」と「逃げる相手」が同じ家にいる人へ──不安×回避のペアダンス、ぜんぶ説明する','2026-05-28'],
+           ['n84ff0e976219','連絡の頻度が合わない二人へ──ちょうどいい距離は、交渉でしか決まらない','2026-09-13']],
+    tips:['t01','t03','t02'],
+    src:'#05 2026-04-26/#02 2026-04-22/#04 2026-04-26/#22 2026-05-28'}
+};
+var TIPS = {
+ t01:'「別れたい」と「傷つけたくない」が同時に来る人へ──黙って消えずに終わらせる、切り出す側の台本',
+ t02:'「嫌いじゃない」と「好きかわからない」が同時に来る人へ──好きと嫌の同居を、2週間の記録でほどく',
+ t03:'返事を待てずに、続けて送ってしまう人へ──送る前に1分で直すLINE、書き直し例20と送信前チェック表'
+};
+var ORDER = ['A','B','C','D','E'];
+var ALLSRC = [
+ '#02 2026-04-22 あなたの愛着スタイル、実はバレてる──回避型・不安型・安定型、あなたはどれ?',
+ '#03 2026-04-23 「ひとりが楽」は危険信号かも。回避型の恋愛、なぜ長続きしない?',
+ '#04 2026-04-26 既読スルーで世界が終わる、あなたへ──不安型のしがみつきをほどく3ステップ',
+ '#05 2026-04-26 安定型は生まれつきじゃない──大人から育て直す「安全基地の再設計」完全ガイド',
+ '#06 2026-04-28 「好き」と「無理」が同時に来る人へ──恐れ回避型の恋愛、ぜんぶ説明する',
+ '#22 2026-05-28 「追いかける私」と「逃げる相手」が同じ家にいる人へ──不安×回避のペアダンス',
+ '#23 2026-05-30 「いま大丈夫?」を10回送りたくなる人へ──不安型の確認ループから、夜に灯すべき次の一手',
+ '#26 2026-06-15 「話してるのにスマホを見てる」と「私もつい見てしまう」が同居する人へ──スマホ無視と二人の距離',
+ '#28 2026-06-21 「言わなくても伝わる」と「言ってもらえないと寂しい」が同居する人へ──ありがとうの言い忘れ',
+ '(場面の補強に題名のみ参照) #18 2026-05-11/#31 2026-07-17/#32 2026-07-17/#56 2026-08-22/#76 2026-09-13/#78 2026-09-15/#85 2026-09-23/#88 2026-09-26'
+];
+
+// ---------- state ----------
+var answers = []; // index of option per question
+var cur = 0;
+var $ = function(id){ return document.getElementById(id); };
+function show(id){
+  var s = document.querySelectorAll('.screen');
+  for (var i=0;i<s.length;i++) s[i].classList.toggle('active', s[i].id===id);
+  window.scrollTo(0,0);
+}
+function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('on');},2600); }
+
+// ---------- quiz ----------
+function renderQ(){
+  var q = Q[cur];
+  $('prog').style.width = Math.round(cur/Q.length*100)+'%';
+  $('qnum').textContent = 'Q'+(cur+1)+' / '+Q.length;
+  $('qtext').textContent = q.q;
+  var box = $('opts'); box.innerHTML='';
+  q.o.forEach(function(o,i){
+    var b = document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.setAttribute('data-i', i);
+    b.innerHTML = '<b>'+(i+1)+'</b><span></span>';
+    b.querySelector('span').textContent = o.s;
+    if (answers[cur]===i) b.style.borderColor='var(--green)';
+    b.addEventListener('click', function(){ pick(i); });
+    box.appendChild(b);
+  });
+  $('btnBack').style.visibility = cur===0 ? 'hidden' : 'visible';
+}
+function pick(i){
+  answers[cur]=i;
+  if (cur < Q.length-1){ cur++; renderQ(); }
+  else { showResult(); }
+}
+
+// ---------- scoring (採点表.md §2) ----------
+function score(ans){
+  var sc={A:0,B:0,C:0,D:0,E:0};
+  ans.forEach(function(oi,qi){ sc[Q[qi].o[oi].t]++; });
+  var max = Math.max.apply(null, ORDER.map(function(k){return sc[k];}));
+  var tops = ORDER.filter(function(k){return sc[k]===max;});
+  var win;
+  if (tops.length===1) win = tops[0];
+  else if (tops.indexOf('C')>=0) win = 'C';
+  else if (tops.indexOf('A')>=0 && tops.indexOf('B')>=0) win = 'C';
+  else win = ['A','B','D','E'].filter(function(k){return tops.indexOf(k)>=0;})[0];
+  // sub type: next highest excluding winner (same tie order)
+  var rest = ORDER.filter(function(k){return k!==win;});
+  var m2 = Math.max.apply(null, rest.map(function(k){return sc[k];}));
+  var t2 = rest.filter(function(k){return sc[k]===m2;});
+  var sub = (t2.length>1 && t2.indexOf('C')>=0) ? 'C' : t2[0];
+  return {sc:sc, win:win, sub:sub, max:max};
+}
+
+// ---------- result ----------
+var current = null;
+function showResult(){
+  var r = score(answers); current = r;
+  var t = T[r.win];
+  $('rimg').src = t.img; $('rimg').alt = t.alt;
+  $('rname').textContent = t.name; $('rname2').textContent = t.name+' の解説';
+  $('rcatch').textContent = t.catch;
+  var subTxt = (r.sc[r.sub]>0) ? 'サブタイプ: '+T[r.sub].name+'(10問中 '+r.sc[r.sub]+')' : '';
+  if (r.sc[r.win] < r.max) subTxt = '追いかけ型と冷蔵庫型が同点(各 '+r.max+')=追う動きと冷やす動きが同じだけ出ているため、振り子型と判定しました。'+(subTxt ? ' / '+subTxt : '');
+  $('rsub').textContent = subTxt;
+  var bars = $('rbars'); bars.innerHTML='';
+  ORDER.forEach(function(k){
+    var d = document.createElement('div'); d.className='bar'+(k===r.win?' top':'');
+    d.innerHTML = '<span></span><span class="tr"><i style="width:'+(r.sc[k]*10)+'%"></i></span><span>'+r.sc[k]+'</span>';
+    d.firstChild.textContent = T[k].name;
+    bars.appendChild(d);
+  });
+  $('rdesc').textContent = t.desc;
+  var ol = $('rtodo'); ol.innerHTML='';
+  t.todo.forEach(function(s){ var li=document.createElement('li'); li.textContent=s; ol.appendChild(li); });
+  var ul = $('rnotes'); ul.innerHTML='';
+  t.notes.forEach(function(n){
+    var li=document.createElement('li'); var a=document.createElement('a');
+    a.href = NOTE+n[0]; a.target='_blank'; a.rel='noopener'; a.textContent = n[1];
+    li.appendChild(a); li.appendChild(document.createTextNode('('+n[2]+')')); ul.appendChild(li);
+  });
+  // URL が未確定([...] のプレースホルダ)の間は、その導線ブロックを自動で隠す(壊れたリンクを公開しないための保険・反証役 11-04)
+  var ph = function(u){ return !u || u.charAt(0)==='['; };
+  $('lnkKindle').href = KINDLE_URL;
+  document.querySelector('.cta.kindle').style.display = ph(KINDLE_URL) ? 'none' : '';
+  var tu = $('rtips'); tu.innerHTML=''; var shown=0;
+  t.tips.forEach(function(k){
+    if (ph(TIPS_URL[k])) return;
+    var li=document.createElement('li'); var a=document.createElement('a');
+    a.href = TIPS_URL[k]; a.target='_blank'; a.rel='noopener'; a.textContent = TIPS[k];
+    if (shown===0){ a.style.fontWeight='700'; var tg=document.createElement('span'); tg.className='tag'; tg.textContent='このタイプにおすすめ'; li.appendChild(a); li.appendChild(tg); }
+    else li.appendChild(a);
+    tu.appendChild(li); shown++;
+  });
+  document.querySelector('.cta.tips').style.display = shown ? '' : 'none';
+  var as = $('allsrc'); as.innerHTML='';
+  ALLSRC.forEach(function(s){ var li=document.createElement('li'); li.textContent=s; as.appendChild(li); });
+  $('prog').style.width='100%';
+  show('result');
+}
+
+// ---------- share ----------
+function shareText(){
+  var t = T[current.win];
+  return '恋愛の返信スタイル診断、わたしは「'+t.name+'」でした。'+t.catch+'\n#返信スタイル診断 #こいまいんど'+(SITE_URL.charAt(0)==='[' ? '' : '\n'+SITE_URL);
+}
+$('btnShare').addEventListener('click', function(){
+  var url = 'https://x.com/intent/tweet?text='+encodeURIComponent(shareText());
+  var w = window.open(url, '_blank', 'noopener');
+  if (!w) toast('ポップアップがブロックされました。文面をコピーしました。');
+  try { navigator.clipboard && navigator.clipboard.writeText(shareText()); } catch(e){}
+});
+
+// 結果カード画像(1200×630)。端末内で生成。送信しない。
+function wrapText(ctx, text, x, y, maxW, lh){
+  var line='', cy=y;
+  for (var i=0;i<text.length;i++){
+    var test=line+text[i];
+    if (ctx.measureText(test).width>maxW && line){ ctx.fillText(line,x,cy); line=text[i]; cy+=lh; }
+    else line=test;
+  }
+  if (line) ctx.fillText(line,x,cy);
+  return cy;
+}
+$('btnSave').addEventListener('click', function(){
+  var t = T[current.win];
+  var c = document.createElement('canvas'); c.width=1200; c.height=630;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle='#fff7ef'; ctx.fillRect(0,0,1200,630);
+  ctx.fillStyle='#e8f5e3'; ctx.beginPath(); ctx.arc(960,315,330,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#4fae3f'; ctx.fillRect(0,0,1200,14);
+  ctx.fillStyle='#6f6a63'; ctx.font='bold 28px "Hiragino Sans",sans-serif'; ctx.fillText('恋愛の返信スタイル診断',70,90);
+  ctx.fillStyle='#2b2a28'; ctx.font='900 72px "Hiragino Sans",sans-serif'; ctx.fillText(t.name,70,200);
+  ctx.fillStyle='#e0657a'; ctx.font='bold 36px "Hiragino Sans",sans-serif'; wrapText(ctx,t.catch,70,270,620,48);
+  ctx.fillStyle='#2b2a28'; ctx.font='26px "Hiragino Sans",sans-serif';
+  var y=360; ORDER.forEach(function(k){
+    ctx.fillStyle='#2b2a28'; ctx.fillText(T[k].name,70,y);
+    ctx.fillStyle='#f1e7da'; ctx.fillRect(230,y-20,400,16);
+    ctx.fillStyle = k===current.win ? '#e0657a' : '#4fae3f'; ctx.fillRect(230,y-20,40*current.sc[k],16);
+    y+=42;
+  });
+  ctx.fillStyle='#6f6a63'; ctx.font='22px "Hiragino Sans",sans-serif'; ctx.fillText('こいまいんど|恋愛心理学ラボ  '+(SITE_URL.charAt(0)==='[' ? '' : SITE_URL),70,590);
+  var img = new Image(); img.onload = function(){
+    var h=460, w=img.width*h/img.height; ctx.drawImage(img, 960-w/2, 85, w, h);
+    try {
+      var a=document.createElement('a'); a.download='henshin-style_'+current.win+'.png'; a.href=c.toDataURL('image/png'); a.click();
+      toast('画像を保存しました');
+    } catch(e){ toast('この環境では画像を保存できません(公開後の https で使えます)'); }
+  };
+  img.onerror=function(){ toast('画像を読み込めませんでした'); };
+  img.src = t.img;
+});
+
+// ---------- nav ----------
+$('btnStart').addEventListener('click', function(){ answers=[]; cur=0; renderQ(); show('quiz'); });
+$('btnRetry').addEventListener('click', function(){ answers=[]; cur=0; renderQ(); show('quiz'); });
+$('btnBack').addEventListener('click', function(){ if (cur>0){ cur--; renderQ(); } });
+$('btnQuit').addEventListener('click', function(){ show('start'); });
+
+// 確認用: ?demo=A〜E で、そのタイプの結果画面を直接開く(プレビュー・OG画像の撮影用。採点には影響しない)
+(function demo(){
+  var m = /[?&]demo=([A-E])/i.exec(location.search);
+  if (!m) return;
+  var k = m[1].toUpperCase();
+  answers = Q.map(function(q){ return q.o.findIndex(function(o){ return o.t===k; }); });
+  showResult();
+})();
+
+// 開発用の自己検査(採点表.md §3 の対応表と一致するか)。コンソールにだけ出す。
+(function selfCheck(){
+  var cnt={A:0,B:0,C:0,D:0,E:0};
+  Q.forEach(function(q){ q.o.forEach(function(o){ cnt[o.t]++; }); });
+  var ok = ORDER.every(function(k){ return cnt[k]===10; }) && Q.length===10;
+  if (window.console) console.log('[selfcheck] 10問×5択・各タイプ10回:', ok ? 'OK' : 'NG', cnt);
+  window.__quiz = {Q:Q, T:T, score:score};
+})();
+</script>
+</body>
+</html>
